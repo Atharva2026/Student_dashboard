@@ -545,17 +545,17 @@ export function EnhancedAdminDashboard() {
                   <input
                     type="text"
                     className="flex-1 border rounded px-2 py-1"
-                    value={sessions.find(s => s.id === activeSession)?.sessionCode || ''}
+                    value={sessions.find(s => s.id === activeSession)?.session_code || ''}
                     onChange={e => {
                       const updatedSessions = sessions.map(s =>
-                        s.id === activeSession ? { ...s, sessionCode: e.target.value } : s
+                        s.id === activeSession ? { ...s, session_code: e.target.value } : s
                       )
                       setSessions(updatedSessions)
                       debounceTimeout.current && clearTimeout(debounceTimeout.current)
                       setTestLinkLoading(true)
                       debounceTimeout.current = setTimeout(async () => {
                         try {
-                          await createOrUpdateSession({ id: activeSession, sessionCode: e.target.value })
+                          await createOrUpdateSession({ id: activeSession, session_code: e.target.value })
                           toast({ title: "Session Code Saved", description: "Session code updated for this session." })
                         } catch (error: any) {
                           toast({ title: "Error", description: error?.message || JSON.stringify(error), variant: "destructive" })

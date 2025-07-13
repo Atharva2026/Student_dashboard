@@ -75,12 +75,14 @@ export default function AttendancePage() {
     }
     // Find the selected session object
     const sessionObj = sessions.find((s) => s.id === selectedSession)
-    if (!sessionObj || !sessionObj.sessionCode) {
+    console.log('Selected session object:', sessionObj);
+    if (!sessionObj || !sessionObj.session_code) {
+      console.error('Session object or session_code not found:', { sessionObj, selectedSession });
       toast({ title: "Error", description: "Session code not set for this session. Please contact admin.", variant: "destructive" })
       return
     }
     // Compare codes (case-insensitive, trimmed)
-    if (sessionObj.sessionCode.trim().toLowerCase() !== sessionCode.trim().toLowerCase()) {
+    if (sessionObj.session_code.trim().toLowerCase() !== sessionCode.trim().toLowerCase()) {
       toast({ title: "Incorrect Session Code", description: "The session code you entered is incorrect.", variant: "destructive" })
       return
     }
@@ -94,16 +96,18 @@ export default function AttendancePage() {
       // Debug: log what is being sent
       console.log('Marking attendance:', { student_id: user.id, session_id: selectedSession, status: "present" })
       // Mark attendance in Supabase
-      const result = await setAttendance({ student_id: user.id, session_id: selectedSession, status: "present" })
+      await setAttendance({ student_id: user.id, session_id: selectedSession, status: "present" })
       // Debug: log what is returned
-      console.log('Supabase setAttendance result:', result)
+      console.log('Attendance marked successfully')
+      
       toast({ title: "Attendance Marked!", description: `Attendance for ${sessionObj.name} has been marked as present.` })
       // Always fetch the latest attendance from Supabase
       await fetchSessionsAndAttendance()
       if (refreshUserData) await refreshUserData()
     } catch (error) {
-      console.error('Supabase setAttendance error:', error)
-      toast({ title: "Error", description: "Failed to mark attendance.", variant: "destructive" })
+      console.error('Supabase setAttendance error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to mark attendance';
+      toast({ title: "Error", description: errorMessage, variant: "destructive" })
     } finally {
       setIsLoading(false)
     }

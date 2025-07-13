@@ -119,7 +119,9 @@ export function StudentRegistrationForm() {
 
       setTimeout(() => router.push("/login"), 2000)
     } catch (error) {
-      toast({ title: "Error", description: "Registration failed", variant: "destructive" })
+      console.error('Registration error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
+      toast({ title: "Error", description: errorMessage, variant: "destructive" })
     } finally {
       setIsSubmitting(false)
     }

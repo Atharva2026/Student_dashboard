@@ -60,8 +60,8 @@ export function SessionCodeGenerator({ sessionId }: { sessionId: string }) {
     setCodes(updated)
     setEditValue(newCode)
     try {
-      console.log('Attempting to update session code:', { id: sessionId, sessionCode: newCode })
-      await createOrUpdateSession({ id: sessionId, sessionCode: newCode })
+      console.log('Attempting to update session code:', { id: sessionId, session_code: newCode })
+      await createOrUpdateSession({ id: sessionId, session_code: newCode })
       toast({ title: "Code Saved", description: "Session code has been saved to Supabase." })
     } catch (error) {
       console.error('Supabase error:', error)
@@ -77,8 +77,8 @@ export function SessionCodeGenerator({ sessionId }: { sessionId: string }) {
     const updated = { ...codes, [sessionId]: editValue }
     setCodes(updated)
     try {
-      console.log('Attempting to update session code:', { id: sessionId, sessionCode: editValue })
-      await createOrUpdateSession({ id: sessionId, sessionCode: editValue })
+      console.log('Attempting to update session code:', { id: sessionId, session_code: editValue })
+      await createOrUpdateSession({ id: sessionId, session_code: editValue })
       toast({ title: "Code Saved", description: "Session code has been saved to Supabase." })
     } catch (error) {
       console.error('Supabase error:', error)

@@ -96,13 +96,29 @@ export default function TakeTestPage() {
 
     try {
       const sessionId = localStorage.getItem("session_id");
+      const studentId = localStorage.getItem("student_id");
+      
+      console.log('Test submission data:', { sessionId, studentId, testId: id, score: sc, answers });
+      
       if (!sessionId) {
-        console.error("Session ID not found.");
+        console.error("Session ID not found in localStorage");
+        alert("Error: Session not found. Please go back to dashboard and try again.");
+        return;
+      }
+      
+      if (!studentId) {
+        console.error("Student ID not found in localStorage");
+        alert("Error: Student not logged in. Please log in again.");
         return;
       }
 
+      console.log('Submitting test score...');
       await supabaseApi.updateSessionTestScore(sessionId, id, sc);
+      
+      console.log('Submitting test answers...');
       await supabaseApi.updateSessionTestAnswers(sessionId, id, answers);
+
+      console.log('Test submitted successfully!');
 
       // Dispatch event to update donut graph and force dashboard refresh
       window.dispatchEvent(new Event("storage"));
@@ -110,6 +126,8 @@ export default function TakeTestPage() {
 
     } catch (error) {
       console.error("Error submitting test:", error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      alert(`Error submitting test: ${errorMessage}`);
     }
 
     setTimeout(() => {
